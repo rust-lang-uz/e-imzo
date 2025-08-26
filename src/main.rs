@@ -1,15 +1,11 @@
 use native_tls::{TlsConnector, TlsStream};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::{
-    collections::HashMap,
-    io::{Read, Write},
-    net::TcpStream,
-};
+use std::{collections::HashMap, net::TcpStream};
 use tungstenite::{
     client::client,
     handshake::client::{generate_key, Request},
-    ClientHandshake, HandshakeError, Message, WebSocket,
+    Message, WebSocket,
 };
 use url::Url;
 
@@ -21,17 +17,19 @@ struct Certificate {
     alias: String,
 }
 
-#[derive(Serialize, Deserialize)]
-struct UserData {
-    certificates: Vec<Certificate>,
-    success: bool,
-    status: u32,
-}
-
-fn main() {
-    env_logger::init();
-    let pfx = list_all_certificates();
-    println!("this is resut list_all_certificates; {:?}", pfx);
+impl Certificate {
+    fn get_alias(&self) -> HashMap<&str, &str> {
+        self.alias
+            .split(",")
+            .filter_map(|kv| {
+                let mut kv = kv.split("=");
+                match (kv.next(), kv.next()) {
+                    (Some(k), Some(v)) => Some((k, v)),
+                    _ => None,
+                }
+            })
+            .collect()
+    }
 }
 
 struct EIMZOConnection {
@@ -53,8 +51,6 @@ impl EIMZOConnection {
             _ => None,
         }
         .ok_or(())?;
-
-        println!("{remote_addr}");
 
         let req = Request::builder()
             .method("GET")
@@ -109,11 +105,11 @@ struct ListAllCertificatesResponse {
 }
 
 fn list_all_certificates() -> serde_json::Result<Vec<Certificate>> {
-    let mut conn = EIMZOConnection::connect().expect("should connect");
+    let mut conn: EIMZOConnection = EIMZOConnection::connect().expect("should connect");
 
     let _ = conn.set_api_keys();
 
-    let cmd = json!({
+    let cmd: serde_json::Value = json!({
         "plugin": "pfx",
         "name": "list_all_certificates",
     });
@@ -124,4 +120,18 @@ fn list_all_certificates() -> serde_json::Result<Vec<Certificate>> {
     };
 
     value.map(|s| s.certificates)
+}
+
+fn main() {
+    env_logger::init();
+    let pfx = list_all_certificates().expect("not found");
+    // println!("this is resut list_all_certificates; {:?}", pfx);;
+    let a: Vec<_> = pfx.iter().map(|c| (c, c.get_alias())).collect();
+    println!("this is resut list_all_certificates; {:?}", a);
+
+    pfx.iter().map(|c| (c, c.get_alias())).for_each(|(c, a)| {
+        println!("CERT: {c:?}");
+        println!("ALIAS: {a:?}");
+        println!("-----");
+    });
 }
