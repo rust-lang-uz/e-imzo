@@ -1,3 +1,6 @@
+mod error;
+
+use error::CustomError;
 use native_tls::{TlsConnector, TlsStream};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -37,20 +40,20 @@ pub struct EIMZOConnection {
 }
 
 impl EIMZOConnection {
-    fn connect() -> Result<Self, ()> {
-        let ws_url = Url::parse("wss://127.0.0.1:64443/service/cryptapi").map_err(|_| ())?;
+    fn connect() -> Result<Self, CustomError> {
+        let ws_url = Url::parse("wss://127.0.0.1:64443/service/cryptapi")?;
 
         // Establish a TCP connection, then wrap the TCP stream with TLS and connect to the server
         let tls_connector = TlsConnector::builder()
             .danger_accept_invalid_certs(true)
-            .build()
-            .map_err(|_| ())?;
+            .build()?;
 
         let remote_addr = match (ws_url.host(), ws_url.port()) {
             (Some(host), Some(port)) => Some(format!("{host}:{port}")),
             _ => None,
         }
-        .ok_or(())?;
+        .ok_or(())
+        .unwrap();
 
         let req = Request::builder()
             .method("GET")
@@ -63,12 +66,10 @@ impl EIMZOConnection {
             .uri(ws_url.to_string())
             .body(())
             .unwrap();
-        let tcp_stream = std::net::TcpStream::connect(remote_addr.clone()).map_err(|_| ())?;
-        let tls_stream = tls_connector
-            .connect(remote_addr.as_str(), tcp_stream)
-            .map_err(|_| ())?;
+        let tcp_stream = std::net::TcpStream::connect(remote_addr.clone())?;
+        let tls_stream = tls_connector.connect(remote_addr.as_str(), tcp_stream)?;
 
-        let (socket, _) = client(req, tls_stream).map_err(|_| ())?;
+        let (socket, _) = client(req, tls_stream)?;
 
         let connection = Self { socket };
 
@@ -104,8 +105,8 @@ pub struct ListAllCertificatesResponse {
     pub certificates: Vec<Certificate>,
 }
 
-pub fn list_all_certificates() -> serde_json::Result<Vec<Certificate>> {
-    let mut conn: EIMZOConnection = EIMZOConnection::connect().expect("should connect");
+pub fn list_all_certificates() -> Result<Vec<Certificate>, CustomError> {
+    let mut conn: EIMZOConnection = EIMZOConnection::connect()?;
 
     let _ = conn.set_api_keys();
 
@@ -119,5 +120,5 @@ pub fn list_all_certificates() -> serde_json::Result<Vec<Certificate>> {
         _ => Ok(ListAllCertificatesResponse::default()),
     };
 
-    value.map(|s| s.certificates)
+    Ok(value.map(|s| s.certificates)?)
 }
