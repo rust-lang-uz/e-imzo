@@ -1,0 +1,16 @@
+// mod lib;
+// use crate::lib::list_all_certificates;
+
+// fn main() {
+//     env_logger::init();
+//     let pfx = list_all_certificates().expect("not found");
+//     // println!("this is resut list_all_certificates; {:?}", pfx);;
+//     let a: Vec<_> = pfx.iter().map(|c| (c, c.get_alias())).collect();
+//     println!("this is resut list_all_certificates; {:?}", a);
+
+//     pfx.iter().map(|c| (c, c.get_alias())).for_each(|(c, a)| {
+//         println!("CERT: {c:?}");
+//         println!("ALIAS: {a:?}");
+//         println!("-----");
+//     });
+// }
