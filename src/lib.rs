@@ -21,13 +21,13 @@ pub struct Certificate {
 }
 
 impl Certificate {
-    pub fn get_alias(&self) -> HashMap<&str, &str> {
+    pub fn get_alias(&self) -> HashMap<String, String> {
         self.alias
             .split(",")
             .filter_map(|kv| {
                 let mut kv = kv.split("=");
                 match (kv.next(), kv.next()) {
-                    (Some(k), Some(v)) => Some((k, v)),
+                    (Some(k), Some(v)) => Some((k.to_string(), v.to_string())),
                     _ => None,
                 }
             })
