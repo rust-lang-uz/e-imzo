@@ -1,8 +1,8 @@
 use native_tls::TlsStream;
 use std::io;
 use std::net::TcpStream;
-use tungstenite::ClientHandshake;
 use thiserror::Error;
+use tungstenite::ClientHandshake;
 
 #[derive(Error, Debug)]
 pub enum EIMZOError {
