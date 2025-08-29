@@ -57,6 +57,6 @@ in
       description = manifest.description;
       license = with lib.licenses; [asl20 mit];
       platforms = lib.platforms.linux;
-      teams = [ lib.teams.uzinfocom ];
+      teams = [lib.teams.uzinfocom];
     };
   }

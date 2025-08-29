@@ -1,4 +1,7 @@
-mod error;
+#![allow(clippy::never_loop)]
+#![allow(clippy::result_large_err)]
+
+pub mod error;
 
 use error::EIMZOError;
 use native_tls::{TlsConnector, TlsStream};
@@ -6,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{collections::HashMap, net::TcpStream};
 use tungstenite::{
-    client::client,
-    handshake::client::{generate_key, Request},
     Message, WebSocket,
+    client::client,
+    handshake::client::{Request, generate_key},
 };
 use url::Url;
 
@@ -96,7 +99,7 @@ impl EIMZOConnection {
             ]
         });
 
-        self.send_and_wait(Message::Text(set_api_keys.to_string()))
+        self.send_and_wait(Message::Text(set_api_keys.to_string().into()))
     }
 }
 
@@ -115,7 +118,7 @@ pub fn list_all_certificates() -> Result<Vec<Certificate>, EIMZOError> {
         "name": "list_all_certificates",
     });
 
-    let value = match conn.send_and_wait(Message::Text(cmd.to_string())) {
+    let value = match conn.send_and_wait(Message::Text(cmd.to_string().into())) {
         Ok(Message::Text(str)) => serde_json::from_str::<ListAllCertificatesResponse>(&str),
         _ => Ok(ListAllCertificatesResponse::default()),
     };
