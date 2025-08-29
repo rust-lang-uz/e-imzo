@@ -1,6 +1,6 @@
 mod error;
 
-use error::CustomError;
+use error::EIMZOError;
 use native_tls::{TlsConnector, TlsStream};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -40,7 +40,7 @@ pub struct EIMZOConnection {
 }
 
 impl EIMZOConnection {
-    fn connect() -> Result<Self, CustomError> {
+    fn connect() -> Result<Self, EIMZOError> {
         let ws_url = Url::parse("wss://127.0.0.1:64443/service/cryptapi")?;
 
         // Establish a TCP connection, then wrap the TCP stream with TLS and connect to the server
@@ -105,7 +105,7 @@ pub struct ListAllCertificatesResponse {
     pub certificates: Vec<Certificate>,
 }
 
-pub fn list_all_certificates() -> Result<Vec<Certificate>, CustomError> {
+pub fn list_all_certificates() -> Result<Vec<Certificate>, EIMZOError> {
     let mut conn: EIMZOConnection = EIMZOConnection::connect()?;
 
     let _ = conn.set_api_keys();
