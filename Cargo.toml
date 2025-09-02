@@ -1,6 +1,6 @@
 [package]
 name = "e-imzo"
-version = "0.2.2"
+version = "0.2.4"
 edition = "2024"
 license = "Apache-2.0"
 description = "E-IMZO SDK for easier accessing"
@@ -8,7 +8,7 @@ homepage = "https://github.com/xinux-org"
 repository = "https://github.com/xinux-org/e-imzo-rs"
 authors = ["Xinux Dvelopers <support@oss.uzinfocom.uz>"]
 readme = "README.md"
-keywords = ["e-imzo"]
+keywords = ["e-imzo", "uzbek"]
 
 # Optimize release binary as much as possible
 [profile.release]
