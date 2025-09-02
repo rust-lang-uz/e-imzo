@@ -15,7 +15,7 @@ use tungstenite::{
 };
 use url::Url;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Certificate {
     pub disk: String,
     pub path: String,

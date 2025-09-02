@@ -13,7 +13,6 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
     flake-utils,
     ...
@@ -27,8 +26,5 @@
 
       # Development environment
       devShells.default = import ./shell.nix {inherit pkgs;};
-
-      # Output package
-      packages.default = pkgs.callPackage ./. {inherit pkgs;};
     });
 }
