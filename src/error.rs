@@ -4,6 +4,14 @@ use std::net::TcpStream;
 use thiserror::Error;
 use tungstenite::ClientHandshake;
 
+/// Result type for this crate's use.
+///
+/// Instead of using Rust's defaulted Result type, we abstracted
+/// Result type to accept a single type parameter by defaulting
+/// our error type
+pub(crate) type Result<T, E = EIMZOError> = std::result::Result<T, E>;
+
+/// E-IMZO crate's error type collection.
 #[derive(Error, Debug)]
 pub enum EIMZOError {
     #[error("A websocket server went down: {0}")]
@@ -19,4 +27,8 @@ pub enum EIMZOError {
     TlsHandshakeError(#[from] native_tls::HandshakeError<TcpStream>),
     #[error("HandshakeError error: {0}")]
     HandshakeError(#[from] tungstenite::HandshakeError<ClientHandshake<TlsStream<TcpStream>>>),
+
+    /// To be used only if you get despaired.
+    #[error("Something aggressive is going on")]
+    Unknown,
 }

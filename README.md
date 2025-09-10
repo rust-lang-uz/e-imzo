@@ -17,7 +17,7 @@ Upon interacting with e-imzo service installed as a deamon in a Linux system, Xi
 
 ## Features
 
-_WIP_
+- Listing certificates [@lib.rs[]](./src/lib.rs)
 
 ## Development
 

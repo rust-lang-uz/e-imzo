@@ -1,4 +1,3 @@
-use chrono::{DateTime, Utc};
 use e_imzo::list_all_certificates;
 
 fn main() {
@@ -11,7 +10,7 @@ fn main() {
                 let validfrom: Vec<_> = a.get("validfrom").unwrap().split(" ").collect();
                 let mut year_month_day: Vec<_> = validfrom[0].split(".").collect();
                 year_month_day.reverse();
-                
+
                 println!("CERT: {c:?}");
                 println!("ALIAS: {a:?}");
                 println!("-----");

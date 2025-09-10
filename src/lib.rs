@@ -1,115 +1,18 @@
 #![allow(clippy::never_loop)]
 #![allow(clippy::result_large_err)]
 
+pub mod client;
 pub mod error;
+pub mod prelude;
 
-use error::EIMZOError;
-use native_tls::{TlsConnector, TlsStream};
-use serde::{Deserialize, Serialize};
+use client::Client;
+use error::Result;
+use prelude::*;
 use serde_json::json;
-use std::{collections::HashMap, net::TcpStream};
-use tungstenite::{
-    Message, WebSocket,
-    client::client,
-    handshake::client::{Request, generate_key},
-};
-use url::Url;
+use tungstenite::Message;
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Certificate {
-    pub disk: String,
-    pub path: String,
-    pub name: String,
-    pub alias: String,
-}
-
-impl Certificate {
-    pub fn get_alias(&self) -> HashMap<String, String> {
-        self.alias
-            .split(",")
-            .filter_map(|kv| {
-                let mut kv = kv.split("=");
-                match (kv.next(), kv.next()) {
-                    (Some(k), Some(v)) => Some((k.to_string(), v.to_string())),
-                    _ => None,
-                }
-            })
-            .collect()
-    }
-}
-
-pub struct EIMZOConnection {
-    pub socket: WebSocket<TlsStream<TcpStream>>,
-}
-
-impl EIMZOConnection {
-    fn connect() -> Result<Self, EIMZOError> {
-        let ws_url = Url::parse("wss://127.0.0.1:64443/service/cryptapi")?;
-
-        // Establish a TCP connection, then wrap the TCP stream with TLS and connect to the server
-        let tls_connector = TlsConnector::builder()
-            .danger_accept_invalid_certs(true)
-            .build()?;
-
-        let remote_addr = match (ws_url.host(), ws_url.port()) {
-            (Some(host), Some(port)) => Some(format!("{host}:{port}")),
-            _ => None,
-        }
-        .ok_or(())
-        .unwrap();
-
-        let req = Request::builder()
-            .method("GET")
-            .header("Host", "localhost")
-            .header("Connection", "Upgrade")
-            .header("Upgrade", "websocket")
-            .header("Origin", "https://localhost")
-            .header("Sec-WebSocket-Version", "13")
-            .header("Sec-WebSocket-Key", generate_key())
-            .uri(ws_url.to_string())
-            .body(())
-            .unwrap();
-        let tcp_stream = std::net::TcpStream::connect(remote_addr.clone())?;
-        let tls_stream = tls_connector.connect(remote_addr.as_str(), tcp_stream)?;
-
-        let (socket, _) = client(req, tls_stream)?;
-
-        let connection = Self { socket };
-
-        Ok(connection)
-    }
-
-    pub fn send_and_wait(&mut self, message: Message) -> tungstenite::Result<Message> {
-        self.socket.send(message)?;
-
-        while let Ok(message) = self.socket.read() {
-            return Ok(message);
-        }
-
-        unreachable!();
-    }
-
-    pub fn set_api_keys(&mut self) -> tungstenite::Result<Message> {
-        let set_api_keys = json!({
-            "plugin": "apikey",
-            "name": "apikey",
-            "arguments": [
-                "localhost",
-                "96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B",
-            ]
-        });
-
-        self.send_and_wait(Message::Text(set_api_keys.to_string().into()))
-    }
-}
-
-#[derive(Serialize, Deserialize, Default, Debug)]
-pub struct ListAllCertificatesResponse {
-    pub certificates: Vec<Certificate>,
-}
-
-pub fn list_all_certificates() -> Result<Vec<Certificate>, EIMZOError> {
-    let mut conn: EIMZOConnection = EIMZOConnection::connect()?;
+pub fn list_all_certificates() -> Result<Vec<Certificate>> {
+    let mut conn = Client::connect()?;
 
     let _ = conn.set_api_keys();
 
