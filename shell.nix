@@ -30,32 +30,11 @@ in
       clippy
       rust-analyzer
       cargo-watch
+      rustPlatform.bindgenHook
 
       # Other compile time dependencies
       openssl
       # libressl
-
-      # Gnome related
-      gtk4
-      meson
-      ninja
-      pango
-      parted
-      polkit
-      gettext
-      vte-gtk4
-      pkg-config
-      gdk-pixbuf
-      libadwaita
-      pkg-config
-      libgweather
-      gnome-desktop
-      appstream
-      appstream-glib
-      wrapGAppsHook4
-      desktop-file-utils
-      gobject-introspection
-      rustPlatform.bindgenHook
     ];
 
     # Set Environment Variables
