@@ -1,4 +1,4 @@
-use e_imzo::list_all_certificates;
+use e_imzo::EIMZO;
 
 fn main() {
     env_logger::init();

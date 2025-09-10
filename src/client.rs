@@ -26,16 +26,23 @@ pub struct Client<State> {
 }
 
 impl Client<Disconnected> {
-    pub fn connect() -> Result<Client<Connected>> {
-        let ws_url = Url::parse
-          (&format!("{BASE_URL}/service/cryptapi")))?;
+    pub fn connect<T>(url: Option<T>) -> Result<Client<Connected>>
+    where
+        T: ToString,
+    {
+        let url = match url {
+            Some(v) => v.to_string(),
+            None => BASE_URL.to_string(),
+        };
+
+        let url = Url::parse(&format!("{url}/service/cryptapi"))?;
 
         // Establish a TCP connection, then wrap the TCP stream with TLS and connect to the server
-        let tls_connector = TlsConnector::builder()
+        let tls = TlsConnector::builder()
             .danger_accept_invalid_certs(true)
             .build()?;
 
-        let remote_addr = match (ws_url.host(), ws_url.port()) {
+        let remote_addr = match (url.host(), url.port()) {
             (Some(host), Some(port)) => Some(format!("{host}:{port}")),
             _ => None,
         }
@@ -50,11 +57,11 @@ impl Client<Disconnected> {
             .header("Origin", "https://localhost")
             .header("Sec-WebSocket-Version", "13")
             .header("Sec-WebSocket-Key", generate_key())
-            .uri(ws_url.to_string())
+            .uri(url.to_string())
             .body(())
             .unwrap();
         let tcp_stream = std::net::TcpStream::connect(remote_addr.clone())?;
-        let tls_stream = tls_connector.connect(remote_addr.as_str(), tcp_stream)?;
+        let tls_stream = tls.connect(remote_addr.as_str(), tcp_stream)?;
 
         let (socket, _) = client(req, tls_stream)?;
 
