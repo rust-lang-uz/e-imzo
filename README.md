@@ -31,13 +31,6 @@ nix develop
 # If you want other shell
 nix develop -c $SHELL
 
-# Upon entering development environment for the first
-# time, you'll be asked for your development telegram
-# bot token, it will be written to .env file for more
-# convenient dev env startups. Token is saved at .env
-# file at the root of this project. You can change it
-# whenever you want!
-
 # After entering development environment, inside the
 # env, you can open your editor, so your editor will
 # read all $PATH and environmental variables, also
