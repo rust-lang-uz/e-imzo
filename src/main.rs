@@ -1,8 +1,10 @@
-use e_imzo::EIMZO;
+use e_imzo::{EIMZO, Result};
 
-fn main() {
+fn main() -> Result<()> {
     env_logger::init();
-    match list_all_certificates() {
+    let mut eimzo = EIMZO::new()?;
+
+    match eimzo.list_all_certificates() {
         Ok(pfx) => {
             let a: Vec<_> = pfx.iter().map(|c| (c, c.get_alias())).collect();
             println!("this is resut list_all_certificates; {a:?}");
@@ -19,4 +21,6 @@ fn main() {
         }
         Err(e) => println!("{e}"),
     }
+
+    Ok(())
 }

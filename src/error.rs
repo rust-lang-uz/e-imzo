@@ -9,7 +9,7 @@ use tungstenite::ClientHandshake;
 /// Instead of using Rust's defaulted Result type, we abstracted
 /// Result type to accept a single type parameter by defaulting
 /// our error type
-pub(crate) type Result<T, E = EIMZOError> = std::result::Result<T, E>;
+pub type Result<T, E = EIMZOError> = std::result::Result<T, E>;
 
 /// E-IMZO crate's error type collection.
 #[derive(Error, Debug)]

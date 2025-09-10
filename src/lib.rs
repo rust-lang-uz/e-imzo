@@ -5,8 +5,10 @@ pub mod client;
 pub mod error;
 pub mod prelude;
 
+// Public re-exports
+pub use error::{EIMZOError as Error, Result};
+
 use client::{Client, Connected, Disconnected};
-use error::Result;
 use prelude::*;
 use serde_json::json;
 use tungstenite::Message;
