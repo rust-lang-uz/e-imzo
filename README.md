@@ -46,7 +46,7 @@ inside `shell.nix`.
 
 ## Thanks
 
-- [Bahrom](https://github.com/bahrom04) & [Shakhzod](https://github.com/shakhzodkudratov) - For creating and maintaining this awesome bot (shameless ad).
+- [Bahrom](https://github.com/bahrom04) - For creating and maintaining this awesome SDK.
 - [Rust Template](https://github.com/bleur-org/templates) - For helping to initiate bot faster and proceed with development.
 
 ## License
