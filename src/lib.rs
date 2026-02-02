@@ -27,8 +27,6 @@ impl EIMZO<Disconnected> {
 
 impl EIMZO<Connected> {
     pub fn list_all_certificates(&mut self) -> Result<Vec<Certificate>> {
-        let _ = self.client.set_api_keys();
-
         let cmd: serde_json::Value = json!({
             "plugin": "pfx",
             "name": "list_all_certificates",
