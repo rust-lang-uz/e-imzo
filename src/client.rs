@@ -1,6 +1,5 @@
 use crate::error::Result;
 use native_tls::{TlsConnector, TlsStream};
-use serde_json::json;
 use std::marker::{self, PhantomData};
 use std::net::TcpStream;
 use tungstenite::{
