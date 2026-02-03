@@ -84,17 +84,4 @@ impl Client<Connected> {
 
         unreachable!();
     }
-
-    pub fn set_api_keys(&mut self) -> tungstenite::Result<Message> {
-        let set_api_keys = json!({
-            "plugin": "apikey",
-            "name": "apikey",
-            "arguments": [
-                "localhost",
-                "96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B",
-            ]
-        });
-
-        self.send_and_wait(Message::Text(set_api_keys.to_string().into()))
-    }
 }
