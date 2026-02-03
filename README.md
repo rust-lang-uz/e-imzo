@@ -15,6 +15,14 @@
 
 Upon interacting with e-imzo service installed as a deamon in a Linux system, Xinux Team ran into many issues while trying to obtain information about keys from the service. Not so everything was documented and websocket was unresponsibe. Therefore, it was decided to develop a specific library to enhance e-imzo integration for Rust ecosystem.
 
+> [!NOTE]
+e-imzo sdk ishlash uchun quyidagilar mos kelishi kerak.
+
+| crate | e-imzo .jar |
+| :---  | :---: |
+| 2.5.6 | 6.0.6 |
+| 2.5.5 | 5.20 |
+
 ## Features
 
 - Listing certificates [@lib.rs[]](./src/lib.rs)
