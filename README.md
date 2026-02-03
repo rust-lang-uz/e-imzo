@@ -20,8 +20,8 @@ e-imzo sdk ishlash uchun quyidagilar mos kelishi kerak.
 
 | crate | e-imzo .jar |
 | :---  | :---: |
-| 2.5.6 | 6.0.6 |
-| 2.5.5 | 5.20 |
+| 0.2.6 | 6.0.6 |
+| 0.2.5 | 5.20 |
 
 ## Features
 
