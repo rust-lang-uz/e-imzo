@@ -13,10 +13,10 @@ fn main() -> Result<()> {
                 let mut year_month_day: Vec<_> = validfrom[0].split(".").collect();
                 year_month_day.reverse();
 
-                println!("CERT: {c:?}");
-                println!("ALIAS: {a:?}");
+                println!("CERT: {c:#?}");
+                println!("ALIAS: {a:#?}");
                 println!("-----");
-                println!("DATE: {:?}", year_month_day.join("."));
+                println!("DATE: {:#?}", year_month_day.join("."));
             });
         }
         Err(e) => println!("{e}"),
