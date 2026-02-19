@@ -32,25 +32,20 @@ impl EIMZO<Connected> {
             "name": "list_all_certificates",
         });
 
-        let value: Result<ListAllCertificatesResponse, ()> = match self
+        let Ok(Message::Text(msg)) = self
             .client
             .send_and_wait(Message::Text(cmd.to_string().into()))
-        {
-            Ok(Message::Text(str)) => {
-                let _c = serde_json::from_str::<ListAllCertificatesResponse>(&str)
-                    .unwrap_or_default()
-                    .certificates;
-
-                let new_c = _c.into_iter().map(|x| x.clone()).collect();
-
-                Ok(ListAllCertificatesResponse {
-                    certificates: new_c,
-                })
-
-            }
-            _ => Ok(ListAllCertificatesResponse::default()),
+        else {
+            return Ok(Default::default());
         };
 
-        Ok(value.map(|s| s.certificates).unwrap_or_default())
+        let certs = serde_json::from_str::<ListAllCertificatesResponse>(&msg)
+            .unwrap_or_default()
+            .certificates
+            .into_iter()
+            .map(|x| x.clone())
+            .collect();
+
+        Ok(certs)
     }
 }
