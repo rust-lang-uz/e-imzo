@@ -32,11 +32,30 @@ impl EIMZO<Connected> {
             "name": "list_all_certificates",
         });
 
-        let value = match self
+        let value: Result<ListAllCertificatesResponse, ()> = match self
             .client
             .send_and_wait(Message::Text(cmd.to_string().into()))
         {
-            Ok(Message::Text(str)) => serde_json::from_str::<ListAllCertificatesResponse>(&str),
+            Ok(Message::Text(str)) => {
+                let _c = serde_json::from_str::<ListAllCertificatesResponse>(&str)
+                    .unwrap_or_default()
+                    .certificates;
+
+                let new_c = _c.into_iter().map(|x| x.clone()).collect();
+
+                Ok(ListAllCertificatesResponse {
+                    certificates: new_c,
+                })
+
+                // convert string "2027.07.23 17:44:06" into "23.07.2027"
+                // let validfrom: Vec<_> = c.get_alias().get("validfrom").unwrap().split(" ").collect();
+                // let mut validfrom_dmy: Vec<_> = validfrom[0].split(".").collect();
+                // validfrom_dmy.reverse();
+
+                // let validto: Vec<_> = c.get_alias().get("validto").unwrap().split(" ").collect();
+                // let mut validto_dmy: Vec<_> = validto[0].split(".").collect();
+                // validto_dmy.reverse();
+            }
             _ => Ok(ListAllCertificatesResponse::default()),
         };
 

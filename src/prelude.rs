@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use chrono::NaiveDate;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Certificate {
@@ -7,6 +8,10 @@ pub struct Certificate {
     pub path: String,
     pub name: String,
     pub alias: String,
+    pub valid_from: Option<NaiveDate>,
+    pub valid_to: Option<NaiveDate>,
+    pub is_expired: Option<bool>
+
 }
 
 impl Certificate {
