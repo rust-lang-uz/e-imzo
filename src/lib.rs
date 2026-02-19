@@ -47,18 +47,10 @@ impl EIMZO<Connected> {
                     certificates: new_c,
                 })
 
-                // convert string "2027.07.23 17:44:06" into "23.07.2027"
-                // let validfrom: Vec<_> = c.get_alias().get("validfrom").unwrap().split(" ").collect();
-                // let mut validfrom_dmy: Vec<_> = validfrom[0].split(".").collect();
-                // validfrom_dmy.reverse();
-
-                // let validto: Vec<_> = c.get_alias().get("validto").unwrap().split(" ").collect();
-                // let mut validto_dmy: Vec<_> = validto[0].split(".").collect();
-                // validto_dmy.reverse();
             }
             _ => Ok(ListAllCertificatesResponse::default()),
         };
 
-        Ok(value.map(|s| s.certificates)?)
+        Ok(value.map(|s| s.certificates).unwrap_or_default())
     }
 }
