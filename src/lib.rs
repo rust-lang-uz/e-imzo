@@ -5,7 +5,7 @@ pub mod client;
 pub mod error;
 pub mod prelude;
 
-use chrono::{NaiveDateTime};
+use chrono::NaiveDateTime;
 // Public re-exports
 pub use error::{EIMZOError as Error, Result};
 
@@ -47,13 +47,19 @@ impl EIMZO<Connected> {
             .map(move |mut x| {
                 let _a = x.get_alias();
 
-                let validfrom =
-                    NaiveDateTime::parse_from_str(_a.get("validfrom").unwrap(), "%Y.%m.%d %H:%M:%S").unwrap();
+                let validfrom = NaiveDateTime::parse_from_str(
+                    _a.get("validfrom").unwrap(),
+                    "%Y.%m.%d %H:%M:%S",
+                )
+                .unwrap();
                 x.valid_from = Some(validfrom);
 
                 let validto =
-                    NaiveDateTime::parse_from_str(_a.get("validto").unwrap(), "%Y.%m.%d %H:%M:%S").unwrap();
+                    NaiveDateTime::parse_from_str(_a.get("validto").unwrap(), "%Y.%m.%d %H:%M:%S")
+                        .unwrap();
                 x.valid_to = Some(validto);
+
+                x.is_expired = Some(validto.signed_duration_since(validfrom).num_seconds() > 0);
 
                 x
             })
