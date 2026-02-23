@@ -5,10 +5,12 @@ pub mod client;
 pub mod error;
 pub mod prelude;
 
+use chrono::{Local, NaiveDateTime};
 // Public re-exports
 pub use error::{EIMZOError as Error, Result};
 
 use client::{Client, Connected, Disconnected};
+use futures_util::task::LocalSpawn;
 use prelude::*;
 use serde_json::json;
 use tungstenite::Message;
@@ -32,14 +34,41 @@ impl EIMZO<Connected> {
             "name": "list_all_certificates",
         });
 
-        let value = match self
+        let Ok(Message::Text(msg)) = self
             .client
             .send_and_wait(Message::Text(cmd.to_string().into()))
-        {
-            Ok(Message::Text(str)) => serde_json::from_str::<ListAllCertificatesResponse>(&str),
-            _ => Ok(ListAllCertificatesResponse::default()),
+        else {
+            return Ok(Default::default());
         };
 
-        Ok(value.map(|s| s.certificates)?)
+        let certs = serde_json::from_str::<ListAllCertificatesResponse>(&msg)
+            .unwrap_or_default()
+            .certificates
+            .into_iter()
+            .map(|mut x| {
+                let _a = x.get_alias();
+
+                x.valid_from = Some(
+                    NaiveDateTime::parse_from_str(
+                        _a.get("validfrom").unwrap(),
+                        "%Y.%m.%d %H:%M:%S",
+                    )
+                    .unwrap_or_default(),
+                );
+
+                x.valid_to = Some(
+                    NaiveDateTime::parse_from_str(_a.get("validto").unwrap(), "%Y.%m.%d %H:%M:%S")
+                        .unwrap_or_default(),
+                );
+
+                let now = Local::now().naive_local();
+                x.is_expired =
+                    Some(now.signed_duration_since(x.valid_to.unwrap()).num_seconds() > 0);
+
+                x
+            })
+            .collect();
+
+        Ok(certs)
     }
 }
