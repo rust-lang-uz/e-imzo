@@ -45,24 +45,25 @@ impl EIMZO<Connected> {
             .unwrap_or_default()
             .certificates
             .into_iter()
-            .map(move |mut x| {
+            .map(|mut x| {
                 let _a = x.get_alias();
 
-                let validfrom = NaiveDateTime::parse_from_str(
-                    _a.get("validfrom").unwrap(),
-                    "%Y.%m.%d %H:%M:%S",
-                )
-                .unwrap();
-                x.valid_from = Some(validfrom);
+                x.valid_from = Some(
+                    NaiveDateTime::parse_from_str(
+                        _a.get("validfrom").unwrap(),
+                        "%Y.%m.%d %H:%M:%S",
+                    )
+                    .unwrap_or_default(),
+                );
 
-                let validto =
+                x.valid_to = Some(
                     NaiveDateTime::parse_from_str(_a.get("validto").unwrap(), "%Y.%m.%d %H:%M:%S")
-                        .unwrap();
-                x.valid_to = Some(validto);
+                        .unwrap_or_default(),
+                );
 
                 let now = Local::now().naive_local();
-
-                x.is_expired = Some(now.signed_duration_since(validto).num_seconds() > 0);
+                x.is_expired =
+                    Some(now.signed_duration_since(x.valid_to.unwrap()).num_seconds() > 0);
 
                 x
             })
