@@ -5,11 +5,12 @@ pub mod client;
 pub mod error;
 pub mod prelude;
 
-use chrono::NaiveDateTime;
+use chrono::{Local, NaiveDateTime};
 // Public re-exports
 pub use error::{EIMZOError as Error, Result};
 
 use client::{Client, Connected, Disconnected};
+use futures_util::task::LocalSpawn;
 use prelude::*;
 use serde_json::json;
 use tungstenite::Message;
@@ -59,7 +60,9 @@ impl EIMZO<Connected> {
                         .unwrap();
                 x.valid_to = Some(validto);
 
-                x.is_expired = Some(validto.signed_duration_since(validfrom).num_seconds() > 0);
+                let now = Local::now().naive_local();
+
+                x.is_expired = Some(now.signed_duration_since(validto).num_seconds() > 0);
 
                 x
             })
