@@ -20,6 +20,7 @@ Upon interacting with e-imzo service installed as a deamon in a Linux system, Xi
 
 | crate | e-imzo .jar |
 | :---- | :---------: |
+| 0.4.0 |    6.3.7    |
 | 0.3.0 |    6.0.6    |
 | 0.2.6 |    6.0.6    |
 | 0.2.5 |    5.20     |

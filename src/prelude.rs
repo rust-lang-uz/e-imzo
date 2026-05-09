@@ -32,3 +32,8 @@ impl Certificate {
 pub struct ListAllCertificatesResponse {
     pub certificates: Vec<Certificate>,
 }
+
+#[derive(Serialize, Deserialize, Default, Debug)]
+pub struct GenericTextMessage {
+    pub message: String,
+}

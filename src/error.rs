@@ -28,6 +28,23 @@ pub enum EIMZOError {
     #[error("HandshakeError error: {0}")]
     HandshakeError(#[from] tungstenite::HandshakeError<ClientHandshake<TlsStream<TcpStream>>>),
 
+    #[error("Websocket error: {0}")]
+    Websocket(#[from] tungstenite::Error),
+    #[error(
+        "Server closed the connection. Maybe reconnect again with `EIMZO::new()`,
+      {0:?}"
+    )]
+    WebsocketClosed(Option<tungstenite::protocol::CloseFrame>),
+    #[error(
+        "Return type is not tungstenite::Message, it's something Binary or Frame.
+      Other Text, Close, Ping, Pong cases handled on client.rs
+      {0:?}"
+    )]
+    NotTextWebsocketMessage(tungstenite::Message),
+
+    #[error("Error while changing SDK language {0}")]
+    LocaleError(#[from] locale_rs::error::LocaleError),
+
     /// To be used only if you get despaired.
     #[error("Something aggressive is going on")]
     Unknown,
