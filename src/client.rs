@@ -1,4 +1,4 @@
-use crate::error::Result;
+use crate::error::{self, Result};
 use native_tls::{TlsConnector, TlsStream};
 use std::marker::{self, PhantomData};
 use std::net::TcpStream;
@@ -74,13 +74,25 @@ impl Client<Disconnected> {
 }
 
 impl Client<Connected> {
-    pub fn send_and_wait(&mut self, message: Message) -> tungstenite::Result<Message> {
+    pub fn send_and_wait(&mut self, message: Message) -> Result<Message, error::EIMZOError> {
         self.socket.send(message)?;
 
-        while let Ok(message) = self.socket.read() {
-            return Ok(message);
+        loop {
+            let msg = self.socket.read()?;
+            match msg {
+                Message::Ping(payload) => {
+                    self.socket.send(Message::Pong(payload))?;
+                }
+                Message::Pong(_) => continue,
+                // Return the Text, Binary, or Close frame to the caller
+                Message::Text(msg) => return Ok(Message::Text(msg)),
+                Message::Close(msg) => {
+                    return Err(error::EIMZOError::WebsocketClosed(msg));
+                }
+                _ => {
+                    return Err(error::EIMZOError::Unknown);
+                }
+            }
         }
-
-        unreachable!();
     }
 }

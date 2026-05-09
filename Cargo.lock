@@ -203,10 +203,11 @@ dependencies = [
 
 [[package]]
 name = "e-imzo"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "chrono",
  "env_logger",
+ "locale-rs",
  "log",
  "native-tls",
  "serde",
@@ -519,6 +520,15 @@ name = "litemap"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6373607a59f0be73a39b6fe456b8192fcc3585f602af20751600e974dd455e77"
+
+[[package]]
+name = "locale-rs"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a60d21e8bd59109e1719e72f4d43bd07c3b1d082c5e6ac5564ec5c824814b8e8"
+dependencies = [
+ "thiserror",
+]
 
 [[package]]
 name = "log"

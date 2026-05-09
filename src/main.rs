@@ -3,7 +3,6 @@ use e_imzo::{EIMZO, Result};
 fn main() -> Result<()> {
     env_logger::init();
     let mut eimzo = EIMZO::new()?;
-
     match eimzo.list_all_certificates() {
         Ok(pfx) => {
             let a: Vec<_> = pfx.iter().map(|c| (c, c.get_alias())).collect();
@@ -19,6 +18,24 @@ fn main() -> Result<()> {
                 println!("DATE: {:#?}", year_month_day.join("."));
             });
         }
+        Err(e) => println!("{e}"),
+    }
+
+    let mut eimzo = EIMZO::new()?;
+    match eimzo.change_ui_lang("uz") {
+        Ok(_res) => {}
+        Err(e) => println!("{e}"),
+    }
+
+    let mut eimzo = EIMZO::new()?;
+    match eimzo.get_jvm_version() {
+        Ok(res) => println!("get_jvm_version: {res:#?}"),
+        Err(e) => println!("{e}"),
+    }
+
+    let mut eimzo = EIMZO::new()?;
+    match eimzo.show_menu() {
+        Ok(res) => println!("get_jvm_version: {res:#?}"),
         Err(e) => println!("{e}"),
     }
 
