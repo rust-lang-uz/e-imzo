@@ -10,7 +10,6 @@ use chrono::{Local, NaiveDateTime};
 pub use error::{EIMZOError as Error, Result};
 
 use client::{Client, Connected, Disconnected};
-use futures_util::task::LocalSpawn;
 use prelude::*;
 use serde_json::json;
 use tungstenite::Message;
