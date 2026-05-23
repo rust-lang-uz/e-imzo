@@ -33,11 +33,11 @@ fn main() -> Result<()> {
         Err(e) => println!("{e}"),
     }
 
-    let mut eimzo = EIMZO::new()?;
-    match eimzo.show_menu() {
-        Ok(res) => println!("get_jvm_version: {res:#?}"),
-        Err(e) => println!("{e}"),
-    }
+    // let mut eimzo = EIMZO::new()?;
+    // match eimzo.show_menu() {
+    //     Ok(res) => println!("get_jvm_version: {res:#?}"),
+    //     Err(e) => println!("{e}"),
+    // }
 
     Ok(())
 }
