@@ -9,6 +9,11 @@ repository = "https://github.com/rust-lang-uz/e-imzo"
 authors = ["Xinux Dvelopers <support@oss.uzinfocom.uz>"]
 readme = "README.md"
 keywords = ["e-imzo", "uzbek"]
+exclude = [
+  "flake.nix",
+  "flake.lock",
+  ".envrc",
+]
 
 # Optimize release binary as much as possible
 [profile.release]
