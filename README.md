@@ -20,6 +20,7 @@ Upon interacting with e-imzo service installed as a deamon in a Linux system, Xi
 
 | crate | e-imzo .jar |
 | :---- | :---------: |
+| 0.4.1 |    6.4.7    |
 | 0.4.0 |    6.3.7    |
 | 0.3.0 |    6.0.6    |
 | 0.2.6 |    6.0.6    |
@@ -41,14 +42,7 @@ nix develop
 # If you want other shell
 nix develop -c $SHELL
 
-# After entering development environment, inside the
-# env, you can open your editor, so your editor will
-# read all $PATH and environmental variables, also
-# your terminal inside your editor will adopt all
-# variables, so, you can close terminal.
-
-# Neovim | VSCode | Zed
-vim .    # code . # zed .
+cargo run
 ```
 
 The development environment has whatever you may need already, but feel free to add or remove whatever
