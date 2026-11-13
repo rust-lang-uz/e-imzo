@@ -37,11 +37,7 @@ impl EIMZO<Connected> {
     /// ```
     /// use e_imzo::EIMZO;
     ///
-    /// let mut eimzo = EIMZO::new().unwrap();
-    /// match eimzo.show_menu() {
-    ///     Ok(res) => println!("show_menu: {res:#?}"),
-    ///     Err(e) => println!("{e}"),
-    /// }
+
     /// ```
     pub fn show_menu(&mut self) -> Result<(), error::EIMZOError> {
         let cmd: serde_json::Value = json!({
