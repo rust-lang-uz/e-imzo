@@ -4,7 +4,6 @@
 pub mod client;
 pub mod error;
 pub mod prelude;
-// #[cfg(feature = "daemon-on")]
 mod tests;
 
 // Public re-exports
@@ -89,10 +88,10 @@ impl EIMZO<Connected> {
     /// Изменить язык интерфейса (не сохраняя в настройках)
     /// doc: https://127.0.0.1:64443/apidoc.html#app.change_ui_lang
     ///
-    ///```
+    /// ```rust
     /// let mut eimzo = e_imzo::EIMZO::new().unwrap();
     /// eimzo.change_ui_lang("uz").unwrap()
-    ///```
+    /// ```
     pub fn change_ui_lang<T>(&mut self, lang: T) -> Result<(), error::EIMZOError>
     where
         T: AsRef<str> + serde::Serialize,
@@ -137,7 +136,7 @@ impl EIMZO<Connected> {
     ///    }
     ///    Err(e) => println!("{e}"),
     /// }
-    ///```
+    /// ```
     pub fn list_all_certificates(&mut self) -> Result<Vec<Certificate>, error::EIMZOError> {
         let cmd: serde_json::Value = json!({
             "plugin": "pfx",
