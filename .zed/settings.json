@@ -3,7 +3,7 @@
     "rust-analyzer": {
       "initialization_options": {
         "cargo": {
-          "features": ["daemon-off"],
+          "features": ["_daemon_on", "_daemon-off"],
         },
       },
     },

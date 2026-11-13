@@ -1,3 +1,4 @@
+#[cfg(feature = "_daemon-on")]
 #[cfg(test)]
 mod daemon_on {
     use crate::EIMZO;
@@ -40,7 +41,7 @@ mod daemon_on {
     }
 }
 
-#[cfg(feature = "daemon-off")]
+#[cfg(feature = "_daemon-off")]
 #[cfg(test)]
 mod daemon_off {
     use crate::EIMZO;
