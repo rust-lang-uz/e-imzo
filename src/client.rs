@@ -18,6 +18,7 @@ pub struct Connected;
 pub struct Disconnected;
 
 /// The client instance for transmitting data through WebSocket connection
+#[derive(Debug)]
 pub struct Client<State> {
     pub socket: WebSocket<TlsStream<TcpStream>>,
     /// Connected Marker

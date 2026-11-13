@@ -4,6 +4,8 @@
 pub mod client;
 pub mod error;
 pub mod prelude;
+// #[cfg(feature = "daemon-on")]
+mod tests;
 
 // Public re-exports
 pub use error::{EIMZOError as Error, Result};
@@ -16,6 +18,7 @@ use serde_json::json;
 use std::str::FromStr;
 use tungstenite::Message;
 
+#[derive(Debug)]
 pub struct EIMZO<State> {
     client: Client<State>,
 }
@@ -32,13 +35,15 @@ impl EIMZO<Connected> {
     /// Информацио о версии JVM
     /// doc: https://127.0.0.1:64443/apidoc.html#app.show_menu
     ///
-    ///```
+    /// ```
+    /// use e_imzo::EIMZO;
+    ///
     /// let mut eimzo = EIMZO::new().unwrap();
     /// match eimzo.show_menu() {
     ///     Ok(res) => println!("show_menu: {res:#?}"),
     ///     Err(e) => println!("{e}"),
-    ///}
-    ///```
+    /// }
+    /// ```
     pub fn show_menu(&mut self) -> Result<(), error::EIMZOError> {
         let cmd: serde_json::Value = json!({
             "plugin"    :"app",
@@ -53,13 +58,15 @@ impl EIMZO<Connected> {
     /// Информацио о версии JVM
     /// doc: https://127.0.0.1:64443/apidoc.html#app.get_jvm_version
     ///
-    ///```
+    /// ```
+    /// use e_imzo::EIMZO;
+    ///
     /// let mut eimzo = EIMZO::new().unwrap();
     /// match eimzo.get_jvm_version() {
     ///     Ok(res) => println!("get_jvm_version: {res:#?}"),
     ///     Err(e) => println!("{e}"),
-    ///}
-    ///```
+    /// }
+    /// ```
     pub fn get_jvm_version(&mut self) -> Result<String, error::EIMZOError> {
         let cmd: serde_json::Value = json!({
             "plugin"    :"app",
@@ -83,8 +90,8 @@ impl EIMZO<Connected> {
     /// doc: https://127.0.0.1:64443/apidoc.html#app.change_ui_lang
     ///
     ///```
-    /// let mut eimzo = EIMZO::new().unwrap();
-    /// eimzo.change_ui_lang("uz")
+    /// let mut eimzo = e_imzo::EIMZO::new().unwrap();
+    /// eimzo.change_ui_lang("uz").unwrap()
     ///```
     pub fn change_ui_lang<T>(&mut self, lang: T) -> Result<(), error::EIMZOError>
     where
@@ -110,7 +117,9 @@ impl EIMZO<Connected> {
     /// doc: https://127.0.0.1:64443/apidoc.html#pfx.list_all_certificates
     ///
     /// ```
-    /// let mut eimzo = EIMZO::new()?;
+    /// use e_imzo::EIMZO;
+    ///
+    /// let mut eimzo = EIMZO::new().unwrap();
     /// match eimzo.list_all_certificates() {
     ///    Ok(pfx) => {
     ///      let a: Vec<_> = pfx.iter().map(|c| (c, c.get_alias())).collect();
