@@ -45,6 +45,17 @@ nix develop -c $SHELL
 cargo run
 ```
 
+## Tests
+
+```bash
+# wait around 5 seconds to start daemon
+systemctl start e-imzo.service --user
+cargo test --tests -F _daemon-on
+
+systemctl stop e-imzo.service --user
+cargo test --tests -F _daemon-off
+```
+
 The development environment has whatever you may need already, but feel free to add or remove whatever
 inside `shell.nix`.
 
